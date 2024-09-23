@@ -6,6 +6,7 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"preview": "vite preview",
+		"start": "serve ./build -s -n -L -p $PORT",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"test": "vitest",
@@ -44,6 +45,7 @@
 		"@types/marked": "^6.0.0",
 		"dompurify": "^3.1.6",
 		"marked": "^14.1.2",
-		"openai": "^3.2.1"
+		"openai": "^3.2.1",
+		"serve": "^14.2.3"
 	}
 }
