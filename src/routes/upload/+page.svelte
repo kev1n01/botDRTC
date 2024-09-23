@@ -52,7 +52,12 @@
 	async function refreshDb() {
 		deleting = true;
 		const response = await fetch(`${PUBLIC_PROCESS_FILES_SERVER}/refresh`, {
-			method: 'GET'
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+				'Accept': 'application/json',
+				'Access-Control-Allow-Origin': '*'
+			}
 		});
 		let result = await response.json();
 		if (result && result.success) {
