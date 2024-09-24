@@ -48,7 +48,7 @@ const sendMessage = async() => {
 		return;
 	}
 	load = true;
-	await fetch(`https://botvri-production.up.railway.app/v1/message`, {
+	const res = await fetch(`https://botvri-production.up.railway.app/v1/message`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -61,19 +61,15 @@ const sendMessage = async() => {
 				message: message,
 			}
 		)
-	}).then((res) => {
-		console.log(res);
-		if(res.status !== 200) {
-			console.log('no enviado papito');
-			errorToast('Número de whatsapp incorrecto o inválido');
-		}else{
-			console.log('enviado papeee');
-			successToast('Mensage enviado correctamente');
-		}
-	}).finally(() => {
-		load = false;
-		closeModal();
 	})
+	console.log(res);
+	if(res.status !== 200) {
+		errorToast('Número de whatsapp incorrecto o inválido');
+	}else{
+		successToast('Mensage enviado correctamente');
+	}
+	load = false;
+	number_phone = '';
 }
 
 const closeModal = () => {
