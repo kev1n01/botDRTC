@@ -1,12 +1,14 @@
 <script lang="ts">
 import { getModalStore, type CssClasses, type ToastSettings } from '@skeletonlabs/skeleton';
 import { Toast, initializeStores, getToastStore} from '@skeletonlabs/skeleton';
+import { ProgressRadial } from '@skeletonlabs/skeleton';
 
 export let parent : any;
 export let modal = false;
 export let classes: CssClasses;
 export let message: string = '';
 export let number_phone: string = '';
+let load: boolean = false;
 
 initializeStores();
 const toastStore = getToastStore();
@@ -45,11 +47,13 @@ const sendMessage = async() => {
 		warningToast('Ingrese un numero válido, solo debe tener 9 dígitos');
 		return;
 	}
+	load = true;
 	await fetch(`https://botvri-production.up.railway.app/v1/message`, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
 			'Accept': 'application/json',
+			'Access-Control-Allow-Origin': '*'
 		},
 		body: JSON.stringify(
 			{
@@ -58,12 +62,16 @@ const sendMessage = async() => {
 			}
 		)
 	}).then((res) => {
+		console.log(res);
 		if(res.status !== 200) {
+			console.log('no enviado papito');
 			errorToast('Número de whatsapp incorrecto o inválido');
 		}else{
-			successToast(`Mensage enviado al número ${number_phone} correctamente`);
+			console.log('enviado papeee');
+			successToast('Mensage enviado correctamente');
 		}
 	}).finally(() => {
+		load = false;
 		closeModal();
 	})
 }
@@ -76,7 +84,7 @@ const closeModal = () => {
 
 </script>
 
-<div class={classes}>
+<div class={classes} id="whatsapp-modal">
 	<Toast position="t"/>
 	<header class="card-header">
 	{#if modal}
@@ -99,6 +107,11 @@ const closeModal = () => {
 		</div>
 	</section>
 	<footer class="card-footer">
-		<button type="button" class="btn variant-filled-primary float-end text-white w-full" on:click={sendMessage}>Enviar</button>
+		<button type="button" class="btn variant-filled-primary float-end text-white w-full" on:click={sendMessage}>
+			{#if load}
+				<ProgressRadial value={undefined}  width="w-5 mr-2" track="stroke-primary-500/30"/>
+			{/if}
+			Enviar
+		</button>
 	</footer>
 </div>

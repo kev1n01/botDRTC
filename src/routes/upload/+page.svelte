@@ -37,15 +37,19 @@
 		const data = new FormData(formEl);
 		const response = await fetch(`${PUBLIC_PROCESS_FILES_SERVER}/process`, {
 			method: 'POST',
+			headers: {
+				'Access-Control-Allow-Origin': '*'
+			},
 			body: data
 		});
 		let result = await response.json();
-		console.error(result);
+		
 		if (result && result.success) {
 			successToast('Información procesada correctamente');
 		} else {
 			errorToast('Hubo un error al procesar la información');
 		}
+		let files: FileList;
 		processing = false;
 	}
 
@@ -70,7 +74,7 @@
 
 </script>
 
-<div class="flex flex-col h-screen bg-[#212121]">
+<div class="flex flex-col md:h-screen h-dvh bg-[#212121]">
 	<Toast position="b"/>
 		
 	<div class="flex-1 flex flex-col">
@@ -136,7 +140,7 @@
 					</FileDropzone>
 
 					{#if files}
-						<div class="mt-4 bg-slate-600 p-4 rounded-lg h-auto max-h-96 overflow-y-auto">
+						<div class="mt-4 bg-slate-600 p-4 rounded-lg h-auto max-h-48 overflow-y-auto">
 							<h3 class="text-white mb-2">Archivos seleccionados:</h3>
 							<ol class="list w-full space-y-2">
 								{#each Array.from(files) as document, i}

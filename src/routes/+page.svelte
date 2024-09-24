@@ -187,7 +187,10 @@
 		scrollToBottom();
 		loading = true;
 		const response = await fetch(`${PUBLIC_PROCESS_FILES_SERVER}/query?text=${query}`, {
-			method: 'GET'
+			method: 'GET',
+			headers: {
+				'Access-Control-Allow-Origin': '*'
+			}
 		});
 		let result: QueryResult = await response.json();
 		documents = result.documents[0];
@@ -235,7 +238,7 @@
 	
 </script>
 
-<div class="flex flex-col h-screen bg-[#212121]">
+<div class="flex flex-col md:h-screen h-dvh bg-[#212121]">
 	<Modal />
 	<Toast position="t" />
 	<div class="flex-1 flex flex-col">
@@ -248,7 +251,7 @@
 		<!-- Topbar -->
 
 		<!-- messages container -->
-		<div class="flex-1 overflow-y-auto p-4 space-y-4" bind:this={messagesContainer}>
+		<div class="flex-1 overflow-y-auto h-auto max-h-[calc(150vh-100px)] space-y-4 p-4" bind:this={messagesContainer}>
 			{#each messages as message}
 				<div class="flex w-full text-white {message.sender === 'user' ? 'justify-end' : 'justify-start'}">
 					<div
