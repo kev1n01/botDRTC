@@ -199,7 +199,7 @@
 	}
 
 	async function queryLLM() {
-		const response = await fetch('/api/bot', {
+		const response = await fetch('/bot', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

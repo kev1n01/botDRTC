@@ -3,6 +3,7 @@
 	import { PUBLIC_PROCESS_FILES_SERVER } from '$env/static/public';
 	import { Toast, initializeStores, getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
+	import { onMount } from 'svelte';
 	
 	initializeStores();
 	const toastStore = getToastStore();
@@ -11,6 +12,20 @@
 	let processing = false;
 	let deleting = false;
 
+	let filesUploaded: { name: string, size: number, type: string }[] = [];
+	
+	onMount(() => {
+		getFiles();
+	});
+
+	const getFiles = () => {
+		const storedFiles = localStorage.getItem('uploadedFiles');
+		if (storedFiles) {
+			filesUploaded = JSON.parse(storedFiles);
+		}else{
+			filesUploaded = [];
+		}
+	}
 	const successToast = (msg: string)  =>{
     	const toast: ToastSettings = {
 			message: msg,
@@ -35,6 +50,27 @@
 		processing = true;
 		const formEl = event.target as HTMLFormElement;
 		const data = new FormData(formEl);
+		
+		// Crear un arreglo para almacenar los nombres o datos de los archivos
+		let uploadedFiles: { name: string, size: number, type: string }[] = [];
+
+		// Obtener los archivos del FormData
+		for (let [key, value] of data.entries()) {
+			if (value instanceof File) {
+				uploadedFiles.push({
+					name: value.name,
+					size: value.size,
+					type: value.type
+				});
+			}
+		}
+
+		// Guardar en el localStorage
+		uploadedFiles.push(...JSON.parse(localStorage.getItem('uploadedFiles') || '[]'));
+
+		localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+
+		// Enviar los archivos al servidor
 		const response = await fetch(`${PUBLIC_PROCESS_FILES_SERVER}/process`, {
 			method: 'POST',
 			headers: {
@@ -42,14 +78,15 @@
 			},
 			body: data
 		});
+		
 		let result = await response.json();
 		
 		if (result && result.success) {
 			successToast('Información procesada correctamente');
+			getFiles();
 		} else {
 			errorToast('Hubo un error al procesar la información');
 		}
-		let files: FileList;
 		processing = false;
 	}
 
@@ -65,6 +102,8 @@
 		});
 		let result = await response.json();
 		if (result && result.success) {
+			localStorage.removeItem('uploadedFiles');
+			getFiles();
 			successToast('Se borro la información correctamente');
 		}else{
 			errorToast('Hubo un error, o no se encontro información para borrar');
@@ -160,6 +199,39 @@
 							{processing ? 'Procesando...' : 'Guardar información'}
 						</button>
 					{/if}
+										
+					<!-- Responsive Container (recommended) -->
+					<div class="table-container mt-10">
+						<!-- Native Table Element -->
+						
+					<table class="table table-hover">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Nombre de archivo</th>
+								<th>Extensión</th>
+								<th>Peso (KB)</th>
+							</tr>
+						</thead>
+						<tbody>
+							{#each filesUploaded as row, i}
+								<tr>
+									<td>{i + 1}</td>
+									<td>{row.name}</td>
+									<td>{row.type}</td>
+									<td>{(row.size / 1024).toFixed(2)} KB</td> <!-- Convertir bytes a KB -->
+								</tr>
+							{/each}
+						</tbody>
+						<tfoot>
+							<tr>
+								<th colspan="3">Total Archivos</th>
+								<td>{filesUploaded.length}</td>
+							</tr>
+						</tfoot>
+					</table>
+					</div>
+
 				</div>
 			</form>
 			
