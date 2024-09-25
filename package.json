@@ -18,6 +18,7 @@
 		"@skeletonlabs/tw-plugin": "^0.4.0",
 		"@sveltejs/adapter-auto": "^3.0.0",
 		"@sveltejs/adapter-static": "^3.0.5",
+		"@sveltejs/adapter-vercel": "^5.4.4",
 		"@sveltejs/kit": "^2.0.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@tailwindcss/forms": "^0.5.9",
@@ -46,6 +47,7 @@
 		"dompurify": "^3.1.6",
 		"marked": "^14.1.2",
 		"openai": "^3.2.1",
-		"serve": "^14.2.3"
+		"serve": "^14.2.3",
+		"svelte-persisted-store": "^0.11.0"
 	}
 }
