@@ -103,11 +103,15 @@ const closeModal = () => {
 		</div>
 	</section>
 	<footer class="card-footer">
-		<button type="button" class="btn variant-filled-primary float-end text-white w-full" on:click={sendMessage}>
+		<button type="button" class="btn variant-filled-primary float-end text-white w-full" on:click={sendMessage}
+			disabled={load}
+		>
 			{#if load}
 				<ProgressRadial value={undefined}  width="w-5 mr-2" track="stroke-primary-500/30"/>
+				Enviando
+			{:else}
+				Enviar
 			{/if}
-			Enviar
 		</button>
 	</footer>
 </div>
