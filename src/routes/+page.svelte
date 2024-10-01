@@ -294,39 +294,38 @@
 	<Toast position="t" />
 	<!-- Topbar -->
     <div class="backdrop-blur-lg shadow p-4 flex items-center justify-between text-gray-200">
-      <div class="flex-1"></div>
       <div class="flex-1 flex justify-center">
         <h4 class="font-bold">AMA CHAT BOT</h4>
       </div>
       <div class="flex-1 flex justify-end relative">
-        <button on:click={toggleDropdown} class="text-white p-2 rounded-full hover:bg-slate-700 transition-colors duration-200">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-          </svg>
-        </button>
-        {#if dropdownOpen}
-          <div 
-            use:clickOutside on:click_outside={() => dropdownOpen = false}
-            class="absolute right-4 mt-10 w-48 bg-gray-700 rounded-md overflow-hidden shadow-xl z-10"
-          >
-            <button 
-              on:click={clearMessages}
-              class="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-600 w-full text-left"
-            >
-              Vaciar mensajes
-            </button>
-          </div>
-        {/if}
+			<button on:click={toggleDropdown} class="text-white p-2 rounded-full hover:bg-slate-700 transition-colors duration-200">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+				<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+			</svg>
+			</button>
+			{#if dropdownOpen}
+			<div 
+				use:clickOutside on:click_outside={() => dropdownOpen = false}
+				class="absolute right-0 mt-0 w-48 bg-gray-700 rounded-md overflow-hidden shadow-xl z-50"
+			>
+				<button 
+				on:click={clearMessages}
+				class="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-600 w-full text-left"
+				>
+				Vaciar mensajes
+				</button>
+			</div>
+			{/if}
       </div>
     </div>	
     <!-- Topbar -->
 
 	<!-- messages container -->
-	<div class="flex-1 overflow-y-scroll h-[100vh] lg:h-full md:h-full  space-y-4 p-4 pb-[160px]" bind:this={messagesContainer}>
+	<div class="flex-1 overflow-y-scroll h-[100vh] lg:h-full md:h-full  space-y-4 p-4 lg:pb-[160px] md:pb-[160px] pb-[250px] z-0" bind:this={messagesContainer}>
 		{#each messages as message}
 			<div class="flex w-full text-white {message.sender === 'user' ? 'justify-end' : 'justify-start'}">
 				<div
-					class="max-w-[100%] md:max-w-[90%] lg:max-w-[60%] {message.sender === 'user'
+					class="max-w-[100%] md:max-w-[90%] lg:max-w-[60%] z-0 {message.sender === 'user'
 						? 'bg-transparent'
 						: 'bg-slate-600'} p-3 rounded-lg relative group overflow-hidden"
 				>
@@ -381,7 +380,7 @@
 		{/if}
 		{#if !loading}
 		<!-- FAQ Section -->
-		<div class="p-4 bg-transparent flex justify-center">
+		<div class="p-4 bg-transparent flex justify-center z-10">
 			<div class="grid grid-cols-2 gap-4 w-full max-w-2xl">
 				{#each faqQuestions as question}
 				<button
