@@ -294,6 +294,7 @@
 	<Toast position="t" />
 	<!-- Topbar -->
     <div class="backdrop-blur-lg shadow p-4 flex items-center justify-between text-gray-200">
+	  <div class="md:flex-1 lg:flex-1"></div>
       <div class="flex-1 flex justify-center">
         <h4 class="font-bold">AMA CHAT BOT</h4>
       </div>
@@ -321,7 +322,7 @@
     <!-- Topbar -->
 
 	<!-- messages container -->
-	<div class="flex-1 overflow-y-scroll h-[100vh] lg:h-full md:h-full  space-y-4 p-4 lg:pb-[160px] md:pb-[160px] pb-[250px] z-0" bind:this={messagesContainer}>
+	<div class="flex-1 overflow-y-scroll h-[100vh] lg:h-full md:h-full  space-y-4 p-4 lg:pb-[160px] md:pb-[160px] pb-[240px] z-0" bind:this={messagesContainer}>
 		{#each messages as message}
 			<div class="flex w-full text-white {message.sender === 'user' ? 'justify-end' : 'justify-start'}">
 				<div
