@@ -307,11 +307,11 @@
         {#if dropdownOpen}
           <div 
             use:clickOutside on:click_outside={() => dropdownOpen = false}
-            class="absolute right-4 mt-10 w-48 bg-white rounded-md overflow-hidden shadow-xl z-10"
+            class="absolute right-4 mt-10 w-48 bg-gray-700 rounded-md overflow-hidden shadow-xl z-10"
           >
             <button 
               on:click={clearMessages}
-              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+              class="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-600 w-full text-left"
             >
               Vaciar mensajes
             </button>
@@ -327,7 +327,7 @@
 			<div class="flex w-full text-white {message.sender === 'user' ? 'justify-end' : 'justify-start'}">
 				<div
 					class="max-w-[80%] md:max-w-[70%] lg:max-w-[60%] {message.sender === 'user'
-						? 'bg-[#212121]'
+						? 'bg-transparent'
 						: 'bg-slate-600'} p-3 rounded-lg relative group overflow-hidden"
 				>
 					{#if message.isCodeBlock}
