@@ -289,7 +289,7 @@
 	}
 </script>
 
-<div class="h-fit md:h-[100vh] lg:h-[100vh] bg-[#212121] overflow-hidden">
+<div class="h-dvh md:h-[100vh] lg:h-[100vh] bg-[#212121] overflow-hidden">
 	<Modal />
 	<Toast position="t" />
 	<!-- Topbar -->
@@ -322,7 +322,7 @@
     <!-- Topbar -->
 
 	<!-- messages container -->
-	<div class="flex-1 overflow-y-scroll  lg:h-full md:h-full  space-y-4 p-4 pb-[160px]" bind:this={messagesContainer}>
+	<div class="flex-1 overflow-y-scroll h-[100vh] lg:h-full md:h-full  space-y-4 p-4 pb-[160px]" bind:this={messagesContainer}>
 		{#each messages as message}
 			<div class="flex w-full text-white {message.sender === 'user' ? 'justify-end' : 'justify-start'}">
 				<div
