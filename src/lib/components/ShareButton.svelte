@@ -40,9 +40,8 @@
   
   <button
     on:click={shareContent}
-    class="text-white py-1 px-2 rounded-full bg-slate-700 hover:bg-slate-800 transition-colors flex justify-center items-center"
+    class="text-slate-600 py-1 px-3 rounded-full bg-slate-100 hover:bg-slate-300 transition-colors flex justify-center items-center dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
     title="Compartir mensaje"
   >
   <svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"><rect fill="none" height="256" width="256"/><circle cx="64" cy="128" fill="none" r="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="176" cy="200" fill="none" r="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><circle cx="176" cy="56" fill="none" r="32" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" x1="149.1" x2="90.9" y1="73.3" y2="110.7"/><line fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16" x1="90.9" x2="149.1" y1="145.3" y2="182.7"/></svg> 
-  Compartir
   </button>

@@ -51,6 +51,11 @@
 		metadatas: MetaData[][];
 	}
 
+	// Variables supports dark mode
+	let darkMode;
+	let darkModeReady = false;
+
+	// Declaration Interfaces 
 	interface MetaData {
 		document_title: string;
 		file_name: string;
@@ -213,8 +218,13 @@
 	}
 
 	onMount(() => {
+		darkMode = document.documentElement.classList.contains('dark');
+		if(darkMode) {
+			darkModeReady = true;
+		}
 		loadMessagesFromLocalStorage();
 		scrollToBottom('smooth');
+
 	});
 
 	let dropdownOpen = false;
@@ -309,13 +319,27 @@
 		query = '';
 		await scrollToBottom('smooth');
 	}
+
+	function toogleTheme() {
+		darkModeReady = !darkModeReady;
+		if (darkModeReady) {
+			document.documentElement.classList.add('dark');
+		} else {
+			document.documentElement.classList.remove('dark');
+		}
+		dropdownOpen = false;
+	}
 </script>
 
-<div class="h-dvh md:h-[100vh] lg:h-[100vh] bg-[#212121] overflow-hidden">
+<svelte:head>
+    <title>Chat bot | MDA</title>
+</svelte:head>
+
+<div class="h-dvh md:h-[100vh] lg:h-[100vh] bg-slate-50 dark:bg-slate-900 overflow-hidden">
 	<Modal />
 	<Toast position="t" />
 	<!-- Topbar -->
-	<div class="backdrop-blur-lg shadow p-4 flex items-center justify-between text-gray-200">
+	<div class="backdrop-blur-lg shadow p-4 flex items-center justify-between text-gray-600 dark:text-gray-100">
 		<div class="md:flex-1 lg:flex-1"></div>
 		<div class="flex-1 flex justify-center">
 			<h4 class="font-bold">AMA CHAT BOT</h4>
@@ -323,7 +347,7 @@
 		<div class="flex-1 flex justify-end relative">
 			<button
 				on:click={toggleDropdown}
-				class="text-white p-2 rounded-full hover:bg-slate-700 transition-colors duration-200"
+				class="text-slate-600 p-2 rounded-full hover:bg-slate-200 transition-colors duration-200 dark:text-gray-200 dark:hover:bg-slate-700"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -344,18 +368,30 @@
 				<div
 					use:clickOutside
 					on:click_outside={() => (dropdownOpen = false)}
-					class="absolute right-0 mt-0 w-48 bg-gray-700 rounded-md overflow-hidden shadow-xl z-50"
+					class="absolute right-2 mt-0 w-48 bg-slate-50 rounded-md overflow-hidden shadow-lg z-50 dark:bg-slate-800"
 				>
 					<button
 						on:click={clearMessages}
-						class="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-600 w-full text-left"
+						class="block px-4 py-2 text-sm text-slate-600 dark:text-gray-200 dark:hover:bg-slate-700 hover:bg-slate-200 w-full text-left"
 					>
 						Vaciar mensajes
 					</button>
+					<button
+						on:click={toogleTheme}
+						class="block px-4 py-2 text-sm text-slate-600 dark:text-gray-200 dark:hover:bg-slate-700 hover:bg-slate-200 w-full text-left"
+					>
+						Cambiar tema
+					</button>
 					{#if $session}
+						<a
+							href="/upload"
+							class="block px-4 py-2 text-sm text-slate-600 dark:text-gray-200 dark:hover:bg-slate-700 hover:bg-slate-200 w-full text-left"
+						>
+							Ir al panel
+						</a>
 						<button
 							on:click={handleSignOut}
-							class="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-600 w-full text-left"
+							class="block px-4 py-2 text-sm text-slate-600 dark:text-gray-200 dark:hover:bg-slate-700 hover:bg-slate-200 w-full text-left"
 						>
 							Cerrar sesión
 						</button>
@@ -368,17 +404,18 @@
 
 	<!-- messages container -->
 	<div
-		class="flex-1 overflow-y-scroll h-[100vh] lg:h-full md:h-full space-y-4 p-4 lg:pb-[160px] md:pb-[160px] pb-[240px] z-0"
+		id="messagesContainer"
+		class="flex-1 overflow-y-scroll h-[100vh] lg:h-full md:h-full space-y-4 p-4 lg:pb-[160px] md:pb-[160px] pb-[240px] -z-10"
 		bind:this={messagesContainer}
 	>
 		{#each messages as message}
 			<div
-				class="flex w-full text-white {message.sender === 'user' ? 'justify-end' : 'justify-start'}"
+				class="flex w-full text-slate-700 dark:text-slate-200 {message.sender === 'user' ? 'justify-end' : 'justify-start'}"
 			>
 				<div
 					class="max-w-[100%] md:max-w-[90%] lg:max-w-[60%] z-0 {message.sender === 'user'
 						? 'bg-transparent'
-						: 'bg-slate-600'} p-3 rounded-lg relative group overflow-hidden"
+						: 'bg-slate-200 dark:bg-slate-800'} p-3 rounded-lg relative group overflow-hidden"
 				>
 					{#if message.isCodeBlock}
 						<CodeBlock code={message.content} language={message.language} />
@@ -386,7 +423,7 @@
 						<MarkdownRenderer content={preprocessMarkdown(message.content)} />
 						<div>
 							{#if documents.length > 0 && message.sender === 'bot'}
-								<p class="mt-2 underline text-blue-300 cursor-pointer">
+								<p class="mt-2 underline text-blue-400 cursor-pointer dark:text-blue-300">
 									Esta respuesta es parte del documento: {metadatas[0].file_name}
 								</p>
 							{/if}
@@ -395,7 +432,8 @@
 							<div class="flex justify-start mt-2 gap-2">
 								<button
 									on:click={() => copyToClipboard(markdownToPlainText(message.content))}
-									class="text-white py-1 px-3 flex justify-center items-center rounded-full bg-slate-700 hover:bg-slate-800"
+									class="text-slate-600 py-1 px-3 flex justify-center items-center rounded-full bg-slate-100 hover:bg-slate-300
+									dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
 									title="Copiar mensaje"
 								>
 									<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-1"
@@ -412,7 +450,7 @@
 								</button>
 								<button
 									on:click={() => whatsappModal(markdownToPlainText(message.content))}
-									class="text-white py-1 px-3 flex justify-center items-center rounded-full bg-slate-700 hover:bg-slate-800"
+									class="text-slate-600 py-1 px-3 flex justify-center items-center rounded-full bg-slate-100 hover:bg-slate-300	dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
 									title="Copiar mensaje"
 								>
 									<svg
@@ -428,10 +466,11 @@
 										/></svg
 									>
 								</button>
-								<!-- <ShareButton content={markdownToPlainText(message.content)} /> -->
+								<ShareButton content={markdownToPlainText(message.content)} />
 								<button
 									on:click={() => toggleSpeaking(markdownToPlainText(message.content))}
-									class=" text-white py-1 px-3 rounded-full bg-slate-700 hover:bg-slate-800 flex justify-center items-center"
+									class=" text-slate-600 py-1 px-3 rounded-full bg-slate-100 hover:bg-slate-300 flex justify-center items-center
+									dark:bg-slate-700 dark:text-slate-200 dark:hover:bg-slate-600"
 									title="Escuchar mensaje"
 								>
 									{#if isSpeaking}
@@ -485,8 +524,8 @@
 			</div>
 		{/each}
 		{#if loading}
-			<div class="p-8 flex justify-start items-start text-start text-white gap-2">
-				<ProgressRadial width="w-5" value={undefined} track="stroke-white" />
+			<div class="p-8 flex justify-start items-start text-start text-slate-600 gap-2 dark:text-slate-200">
+				<ProgressRadial width="w-5" value={undefined} track="stroke-slate-400" />
 				Consultando...
 			</div>
 		{/if}
@@ -497,7 +536,8 @@
 					{#each faqQuestions as question}
 						<button
 							on:click={() => sendFaqQuestion(question)}
-							class="bg-slate-700 hover:bg-slate-600 text-white py-2 px-4 rounded-lg text-sm text-center transition-colors duration-200"
+							class="bg-slate-200 hover:bg-slate-300 text-slate-700 
+							dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 py-2 px-4 rounded-lg text-sm text-center transition-colors duration-200"
 						>
 							{question}
 						</button>
@@ -510,21 +550,22 @@
 	<!-- messages container -->
 
 	<!-- input search -->
-	<div class="p-4 bg-slate-700 absolute bottom-0 left-0 right-0 w-full">
+	<div class="p-4 bg-slate-50 dark:bg-slate-900 absolute bottom-0 left-0 right-0 w-full">
 		<div class="max-w-4xl mx-auto">
-			<div class="flex items-center bg-slate-600 rounded-lg gap-2 p-2">
-				<input
+			<div class="flex items-center bg-slate-200 rounded-lg gap-2 py-2 px-4 dark:bg-slate-600">
+				<textarea
+					rows="1"
 					disabled={loading}
-					type="text"
 					bind:value={query}
 					on:keydown={handleKeyDown}
 					placeholder="Escribe tu consulta..."
-					class="flex-1 px-3 py-2 bg-transparent focus:outline-none text-white rounded-md placeholder:text-slate-300 w-full"
+					class="flex-1 px-3 py-2 bg-transparent focus:outline-none text-slate-600 rounded-md placeholder:text-slate-400 dark:placeholder:text-slate-100 w-full
+					dark:text-white dark:bg-slate-800 bg-white"
 				/>
 				<button
 					type="button"
 					on:click={toggleRecording}
-					class="bg-gray-700 text-white hover:bg-gray-800 p-2 rounded-md flex items-center"
+					class="bg-slate-100 dark:bg-slate-800 text-slate-600 hover:bg-slate-300 p-2 rounded-md flex items-center dark:text-slate-200 dark:hover:bg-slate-700"
 				>
 					{#if isRecording}
 						<span class="animate-pulse bg-red-500 rounded-full h-2 w-2 mr-1" />
@@ -616,7 +657,7 @@
 				<button
 					type="button"
 					on:click={queryEmbeddings}
-					class="bg-green-700 text-white hover:bg-green-800 p-2 rounded-md"
+					class="bg-slate-100 dark:bg-slate-800 text-slate-600 hover:bg-slate-300 p-2 rounded-md flex items-center dark:text-slate-200 dark:hover:bg-slate-700"
 				>
 					Enviar
 				</button>
