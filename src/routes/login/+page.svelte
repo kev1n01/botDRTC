@@ -1,18 +1,23 @@
 <script lang="ts">
 	import { signInWithEmail, signInWithGoogle } from '$lib/auth';
 	import { goto } from '$app/navigation';
+	import { ProgressRadial } from '@skeletonlabs/skeleton';
 
 	let email = '';
 	let password = '';
 	let errorMessage: string | null = null;
+	let loading = false;
 
 	async function handleEmailLogin() {
+		loading = true;
 		try {
 			await signInWithEmail(email, password);
 			goto('/upload');
 		} catch (error: any) {
 			console.error('Error de login:', error);
 			errorMessage = 'Error al iniciar sesión: ' + error.message;
+		} finally {
+			loading = true;
 		}
 	}
 
@@ -26,6 +31,10 @@
 		}
 	}
 </script>
+
+<svelte:head>
+    <title>Iniciar sesión | MDA</title>
+</svelte:head>
 
 <div class="min-h-screen flex items-center justify-center bg-gray-900">
 	<div class="bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full">
@@ -62,8 +71,12 @@
 
 			<button
 				type="submit"
-				class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition duration-300"
+				disabled={loading}
+				class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md transition duration-300 flex justify-center gap-2 items-center"
 			>
+				{#if loading}
+					<ProgressRadial value={undefined} width="w-4 mr-2" track="stroke-white" />
+				{/if}
 				Iniciar sesión
 			</button>
 		</form>
@@ -80,6 +93,7 @@
 
 		<!-- Botón de Google -->
 		<button
+			disabled={loading}
 			on:click={handleGoogleLogin}
 			class="mt-6 w-full bg-gray-700 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md transition duration-300 flex items-center justify-center"
 		>

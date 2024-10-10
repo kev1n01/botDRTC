@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { FileDropzone, ProgressBar, ProgressRadial } from '@skeletonlabs/skeleton';
+	import { FileDropzone, ProgressRadial } from '@skeletonlabs/skeleton';
 	import { PUBLIC_PROCESS_FILES_SERVER } from '$env/static/public';
 	import { Toast, initializeStores, getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
@@ -129,6 +129,10 @@
 
 </script>
 
+<svelte:head>
+    <title>Cargar archivos</title>
+</svelte:head>
+
 <div class="flex flex-col md:h-screen h-dvh bg-[#212121]">
 	<Toast position="b"/>
 		
@@ -252,51 +256,53 @@
 							class="w-full btn bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg mt-4"
 							disabled={processing}
 						>
-							{processing ? 'Procesando...' : 'Guardar información'}
+
+						{#if processing}
+							<ProgressRadial value={undefined} width="w-4 mr-2" track="stroke-white" />
+							Procesando
+						{:else}
+							Procesar archivos
+						{/if}
+
 						</button>
 					{/if}
 										
 					<!-- Responsive Container (recommended) -->
-					<div class="table-container mt-10">
-						<!-- Native Table Element -->
-						
-					<table class="table table-hover">
-						<thead>
-							<tr>
-								<th>#</th>
-								<th>Nombre de archivo</th>
-								<th>Extensión</th>
-								<th>Peso (KB)</th>
-							</tr>
-						</thead>
-						<tbody>
-							{#each filesUploaded as row, i}
+					{#if filesUploaded.length > 0}
+						<div class="table-container mt-10">
+							<!-- Native Table Element -->
+							
+						<table class="table table-hover">
+							<thead>
 								<tr>
-									<td>{i + 1}</td>
-									<td>{row.name}</td>
-									<td>{row.type}</td>
-									<td>{(row.size / 1024).toFixed(2)} KB</td> <!-- Convertir bytes a KB -->
+									<th>#</th>
+									<th>Nombre de archivo</th>
+									<th>Extensión</th>
+									<th>Peso (KB)</th>
 								</tr>
-							{/each}
-						</tbody>
-						<tfoot>
-							<tr>
-								<th colspan="3">Total Archivos</th>
-								<td>{filesUploaded.length}</td>
-							</tr>
-						</tfoot>
-					</table>
-					</div>
+							</thead>
+							<tbody>
+								{#each filesUploaded as row, i}
+									<tr>
+										<td>{i + 1}</td>
+										<td>{row.name}</td>
+										<td>{row.type}</td>
+										<td>{(row.size / 1024).toFixed(2)} KB</td> <!-- Convertir bytes a KB -->
+									</tr>
+								{/each}
+							</tbody>
+							<tfoot>
+								<tr>
+									<th colspan="3">Total Archivos</th>
+									<td>{filesUploaded.length}</td>
+								</tr>
+							</tfoot>
+						</table>
+						</div>
+					{/if}
 
 				</div>
 			</form>
-			
-			{#if processing}
-				<div class="bg-slate-700 p-4 rounded-lg mt-4 max-w-4xl mx-auto">
-					<p class="text-white mb-2">Procesando archivos...</p>
-					<ProgressBar height="h-2" meter="bg-blue-500" track="bg-slate-100" />
-				</div>
-			{/if}
 		</div>
 		<!-- File upload container -->
 	</div>
