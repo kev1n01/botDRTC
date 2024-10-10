@@ -4,19 +4,35 @@
 	import { Toast, initializeStores, getToastStore } from '@skeletonlabs/skeleton';
 	import type { ToastSettings } from '@skeletonlabs/skeleton';
 	import { onMount } from 'svelte';
-	
+	import { signOut } from '$lib/auth';
+	import { clickOutside } from '$lib/clickOutsite';
+	import { session } from '$lib/sessionStore';
+
 	initializeStores();
 	const toastStore = getToastStore();
 
 	let files: FileList;
 	let processing = false;
 	let deleting = false;
+	let dropdownOpen = false;
 
 	let filesUploaded: { name: string, size: number, type: string }[] = [];
 	
 	onMount(() => {
 		getFiles();
 	});
+
+	function toggleDropdown() {
+		dropdownOpen = !dropdownOpen;
+	}
+
+	async function handleSignOut() {
+		try {
+			await signOut();
+		} catch (error) {
+			console.error('Error al cerrar sesión:', error);
+		}
+	}
 
 	const getFiles = () => {
 		const storedFiles = localStorage.getItem('uploadedFiles');
@@ -118,11 +134,59 @@
 		
 	<div class="flex-1 flex flex-col">
 		<!-- Topbar -->
-		<div class="backdrop-blur-lg shadow p-4 items-center flex text-gray-200">
-			<div class="flex justify-center w-full">
-				<div>
-					<h3 class="font-bold">Subir información</h3>
-				</div>
+		<div class="backdrop-blur-lg shadow p-4 flex items-center justify-between text-gray-200">
+			<div class="md:flex-1 lg:flex-1"></div>
+			<div class="flex-1 flex justify-center">
+				<h4 class="font-bold">CARGAR ARCHIVOS</h4>
+			</div>
+			<div class="flex-1 flex justify-end relative">
+				<button
+					on:click={toggleDropdown}
+					class="align-middle content-center items-center flex gap-2 text-white p-2 rounded-full hover:bg-slate-700 transition-colors duration-200"
+				>
+					Opciones
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						class="h-5 w-5"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke="currentColor"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+						/>
+					</svg>
+				</button>
+				{#if dropdownOpen}
+					<div
+						use:clickOutside
+						on:click_outside={() => (dropdownOpen = false)}
+						class="absolute right-0 mt-0 w-48 bg-gray-700 rounded-md overflow-hidden shadow-xl z-50"
+					>
+						<a href="/" 
+							class="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-600 w-full text-left">
+							Conversar con bot
+						</a>
+						<button on:click={refreshDb}
+							class="flex px-4 py-2 text-sm text-gray-100 hover:bg-gray-600 w-full text-left">
+							{#if deleting}
+							<ProgressRadial value={undefined}  width="w-4 mr-2" track="stroke-white"/>
+							{/if}
+							Borrar información
+						</button>
+						{#if $session}
+							<button
+								on:click={handleSignOut}
+								class="block px-4 py-2 text-sm text-gray-100 hover:bg-gray-600 w-full text-left"
+							>
+								Cerrar sesión
+							</button>
+						{/if}
+					</div>
+				{/if}
 			</div>
 		</div>
 		<!-- Topbar -->
@@ -130,15 +194,7 @@
 		<!-- Buttons container -->
 		<div class=" mt-2 space-y-4 max-w-4xl w-full mx-auto p-4">
 			<div class="flex justify-end gap-3">
-				<a href="/" class="w-auto btn bg-blue-600 hover:bg-blue-800 text-white py-2 rounded-lg">
-					Conversar con bot
-				</a>
-				<button on:click={refreshDb} class="w-auto btn bg-red-600 hover:bg-red-800 text-white py-2 rounded-lg">
-					{#if deleting}
-					<ProgressRadial value={undefined}  width="w-5 mr-2" track="stroke-primary-500/30"/>
-					{/if}
-					Borrar información
-				</button>
+				
 			</div>
 		</div>
 		<!-- Buttons container -->
