@@ -33,13 +33,16 @@
 </script>
 
 <svelte:head>
-    <title>Iniciar sesión | MDA</title>
+	<title>Iniciar sesión | MDA</title>
 </svelte:head>
 
-<div class="min-h-screen flex items-center justify-center bg-gray-900">
-	<div class="bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full">
-		<h2 class="text-white text-2xl font-semibold text-center mb-6">Inicio de sesión</h2>
+<div class="min-h-screen flex items-center justify-center bg-gray-900 flex-col">
+	<div class="p-6 items-center content-center flex justify-center flex-col">
+		<img src="/favicon.png" alt="logi_amarilis" class="w-36 h-36 rounded-full col-1"/>
+		<h2 class="text-white text-xl font-semibold text-center mt-2">Bienvenido a AMABOT ADMIN</h2>
+	</div>
 
+	<div class="bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full">
 		{#if errorMessage}
 			<div class="text-red-500 text-sm mb-4">{errorMessage}</div>
 		{/if}

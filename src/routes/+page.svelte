@@ -17,6 +17,7 @@
 	import { clickOutside } from '$lib/clickOutsite';
 	import { signOut } from '$lib/auth';
 	import { session } from '$lib/sessionStore';
+	import ThemeToogle from '$lib/components/ThemeToogle.svelte';
 
 	// init stores
 	initializeStores();
@@ -50,10 +51,6 @@
 		distances: number[][];
 		metadatas: MetaData[][];
 	}
-
-	// Variables supports dark mode
-	let darkMode;
-	let darkModeReady = false;
 
 	// Declaration Interfaces 
 	interface MetaData {
@@ -218,13 +215,8 @@
 	}
 
 	onMount(() => {
-		darkMode = document.documentElement.classList.contains('dark');
-		if(darkMode) {
-			darkModeReady = true;
-		}
 		loadMessagesFromLocalStorage();
 		scrollToBottom('smooth');
-
 	});
 
 	let dropdownOpen = false;
@@ -320,15 +312,6 @@
 		await scrollToBottom('smooth');
 	}
 
-	function toogleTheme() {
-		darkModeReady = !darkModeReady;
-		if (darkModeReady) {
-			document.documentElement.classList.add('dark');
-		} else {
-			document.documentElement.classList.remove('dark');
-		}
-		dropdownOpen = false;
-	}
 </script>
 
 <svelte:head>
@@ -345,6 +328,7 @@
 			<h4 class="font-bold">AMA CHAT BOT</h4>
 		</div>
 		<div class="flex-1 flex justify-end relative">
+			<ThemeToogle />
 			<button
 				on:click={toggleDropdown}
 				class="text-slate-600 p-2 rounded-full hover:bg-slate-200 transition-colors duration-200 dark:text-gray-200 dark:hover:bg-slate-700"
@@ -375,12 +359,6 @@
 						class="block px-4 py-2 text-sm text-slate-600 dark:text-gray-200 dark:hover:bg-slate-700 hover:bg-slate-200 w-full text-left"
 					>
 						Vaciar mensajes
-					</button>
-					<button
-						on:click={toogleTheme}
-						class="block px-4 py-2 text-sm text-slate-600 dark:text-gray-200 dark:hover:bg-slate-700 hover:bg-slate-200 w-full text-left"
-					>
-						Cambiar tema
 					</button>
 					{#if $session}
 						<a
