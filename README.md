@@ -40,15 +40,6 @@ You can preview the production build with `npm run preview`.
 
 
 # title: Información para Obtener Licencia de Conducir por Clase y Categoría
-
-Antes de iniciar cualquier trámite, es necesario realizar un pago en el **Banco de la Nación** según el código de pago correspondiente:
-
-- **Evaluación de conocimiento**: S/. 25.00 (código de pago 6073).
-- **Examen de manejo**: S/. 47.00 (código de pago 6074).
-- **Emisión de licencia de conducir**: S/. 20.80, 29.90, 20.90 (código de pago 6061).
-
-Recuerde que puede obtener los **requisitos** en los centros autorizados que se detallan a continuación:
-
 ## Escuelas de Conductores Autorizadas
 
 Las siguientes escuelas están autorizadas por el Ministerio de Transportes y Comunicaciones (MTC) para brindar capacitación en conducción:
