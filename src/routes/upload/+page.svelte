@@ -82,11 +82,6 @@
 			}
 		}
 
-		// Guardar en el localStorage
-		uploadedFiles.push(...JSON.parse(localStorage.getItem('uploadedFiles') || '[]'));
-
-		localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
-
 		// Enviar los archivos al servidor
 		const response = await fetch(`${PUBLIC_PROCESS_FILES_SERVER}/process`, {
 			method: 'POST',
@@ -100,6 +95,9 @@
 
 		if (result && result.success) {
 			successToast('Información procesada correctamente');
+			// Guardar en el localStorage
+			uploadedFiles.push(...JSON.parse(localStorage.getItem('uploadedFiles') || '[]'));
+			localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
 			getFiles();
 		} else {
 			errorToast('Hubo un error al procesar la información');
@@ -278,24 +276,25 @@
 					{/if}
 
 					<!-- Responsive Container (recommended) -->
-					{#if filesUploaded.length > 0}
-						<div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-10">
-							<!-- Native Table Element -->
 
-							<table
-								class="w-full text-sm text-left rtl:text-right text-slate-500 dark:text-slate-400"
+					<div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-10">
+						<!-- Native Table Element -->
+
+						<table
+							class="w-full text-sm text-left rtl:text-right text-slate-500 dark:text-slate-400"
+						>
+							<thead
+								class="text-sm text-slate-500 uppercase bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:border-none border-t"
 							>
-								<thead
-									class="text-sm text-slate-500 uppercase bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:border-none border-t"
-								>
-									<tr>
-										<th scope="col" class="px-6 py-3">#</th>
-										<th scope="col" class="px-6 py-3">Nombre de archivo</th>
-										<th scope="col" class="px-6 py-3">Extensión</th>
-										<th scope="col" class="px-6 py-3">Peso (KB)</th>
-									</tr>
-								</thead>
-								<tbody>
+								<tr>
+									<th scope="col" class="px-6 py-3">#</th>
+									<th scope="col" class="px-6 py-3">Nombre de archivo</th>
+									<th scope="col" class="px-6 py-3">Extensión</th>
+									<th scope="col" class="px-6 py-3">Peso (KB)</th>
+								</tr>
+							</thead>
+							<tbody>
+								{#if filesUploaded.length > 0}
 									{#each filesUploaded as row, i}
 										<tr
 											class="bg-white border-b dark:bg-slate-800 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600"
@@ -309,26 +308,29 @@
 											<td class="px-6 py-4">{(row.size / 1024).toFixed(2)} KB</td>
 										</tr>
 									{/each}
-								</tbody>
-								<tfoot
-									class="text-sm text-slate-700 uppercase bg-slate-50 dark:bg-slate-700 dark:text-slate-400"
-								>
+								{:else}
 									<tr>
-										<th
-											colspan="3"
-											scope="row"
-											class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap dark:text-white"
-											>Total Archivos</th
-										>
-										<td
-											class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap dark:text-white"
-											>{filesUploaded.length}</td
-										>
+										<td colspan="4" class="px-6 py-4 text-center"> No hay archivos cargados </td>
 									</tr>
-								</tfoot>
-							</table>
-						</div>
-					{/if}
+								{/if}
+							</tbody>
+							<tfoot
+								class="text-sm text-slate-700 uppercase bg-slate-50 dark:bg-slate-700 dark:text-slate-400"
+							>
+								<tr>
+									<th
+										colspan="3"
+										scope="row"
+										class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap dark:text-white"
+										>Total Archivos</th
+									>
+									<td class="px-6 py-4 font-medium text-slate-900 whitespace-nowrap dark:text-white"
+										>{filesUploaded.length}</td
+									>
+								</tr>
+							</tfoot>
+						</table>
+					</div>
 				</div>
 			</form>
 		</div>

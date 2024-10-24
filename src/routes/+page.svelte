@@ -190,10 +190,10 @@
 	}
 
 	const faqQuestions = [
-		'¿Cuáles son los horarios de atención?',
-		'¿Cómo puedo realizar un pago?',
-		'¿Qué necesito para relizar cualquier tipo de trámite?',
-		'¿Qué es el FUE (Formato Único de Edificaciones) y cómo lo presento?'
+		'¿Cuáles son los requisitos para obtener una licencia de conducir por primera vez?',
+		'¿Cuáles son los centros médicos autorizados para la obtención de certificado médico?',
+		'¿Cuál es el horario de atención del DTRC?',
+		'Perdi mi licencia de conducir, quiero obtener otra',
 	];
 
 	function sendFaqQuestion(question: string) {
@@ -284,7 +284,8 @@
 			},
 			body: JSON.stringify({
 				query: query,
-				documents: documents
+				documents: documents,
+				username: ''
 			})
 		});
 		let result = await response.json();
@@ -315,7 +316,7 @@
 </script>
 
 <svelte:head>
-    <title>Chat bot | MDA</title>
+    <title>Chat bot | DRTC</title>
 </svelte:head>
 
 <div class="h-dvh md:h-[100vh] lg:h-[100vh] bg-slate-50 dark:bg-slate-900 overflow-hidden">
@@ -325,7 +326,7 @@
 	<div class="backdrop-blur-lg shadow p-4 flex items-center justify-between text-gray-600 dark:text-gray-100">
 		<div class="md:flex-1 lg:flex-1"></div>
 		<div class="flex-1 flex justify-center">
-			<h4 class="font-bold">AMA CHAT BOT</h4>
+			<h4 class="font-bold">CHAT BOT TRACO</h4>
 		</div>
 		<div class="flex-1 flex justify-end relative">
 			<ThemeToogle />
@@ -398,7 +399,7 @@
 					{#if message.isCodeBlock}
 						<CodeBlock code={message.content} language={message.language} />
 					{:else}
-						<MarkdownRenderer content={preprocessMarkdown(message.content)} />
+						<MarkdownRenderer content={message.content} />
 						<div>
 							{#if documents.length > 0 && message.sender === 'bot'}
 								<p class="mt-2 underline text-blue-400 cursor-pointer dark:text-blue-300">

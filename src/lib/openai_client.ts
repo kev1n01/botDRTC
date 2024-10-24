@@ -8,18 +8,21 @@ const openai = new OpenAIApi(configuration);
 
 export async function createChatCompletion(
 	document: string[],
-	question: string
+	question: string,
+	username: string = '',
 ): Promise<string | null> {
 	let messages = [];
 
-	// Definimos un contexto más detallado para el sistema
-	let systemContent = `You are a digital assistant designed to help the citizens of Amarilis district understand the various administrative processes step by step. Your role is to provide structured,clear, concise, and friendly guidance based on the documents provided. You should also encourage users to ask follow-up questions if they need further clarification. Always answer in Spanish. If you are unsure about an answer, please provide possible steps or where they can seek more information. If you can't find the answer, please ask the user to clarify their question.
-	
-	The goal is to ensure that citizens understand the processes easily, with a focus on clarity and concise responses. Always format your responses using headings, subheadings, and lists. 
-	`;
+	// Definimos un contexto detallado para el sistema
+	let systemContent = `You are a digital assistant called TRACO, designed to assist citizens with questions related to the Dirección Regional de Transportes y Comunicaciones de Huánuco (DRTC). Your goal is to guide users through various services such as vehicle licenses, authorized driving schools, authorized medical centers, citizen complaints, contact information, office hours, and more. All answers should be provided in Spanish, with clarity and a friendly tone.
 
-	// Incluimos los documentos relacionados a los procesos administrativos
-	systemContent += '\n\nThe following are official documents detailing the processes citizens need to follow for various administrative procedures in Amarilis:\n\n```';
+	When a user asks a question, you should structure your response to make it easy to understand, using headings, subheadings, and lists. For general questions, use a decision tree approach by providing options for the user to choose from. For example, if a user asks about "licenses," offer categories like "requisitos para una nueva licencia," "renovación de licencia," or "procedimiento para licencia duplicada".
+
+	Always ensure the user understands the process, and encourage follow-up questions. If the answer is not available or unclear, guide the user on the next steps or where they can obtain further information.`
+
+
+	// Incluimos los documentos relacionados a los servicios y trámites de la DRTC
+	systemContent += '\n\nThe following are official documents detailing the procedures for the DRTC services:\n\n```';
 	for (let i = 0; i < document.length; i++) {
 		systemContent += '\n' + document[i];
 	}
@@ -32,7 +35,7 @@ export async function createChatCompletion(
 	} satisfies ChatCompletionRequestMessage);
 
 	// Definimos el prompt del usuario con la pregunta que realiza
-	let prompt = `A citizen has asked the following question regarding the administrative process in Amarilis: "${question}". Answer based on the provided documents.`;
+	let prompt = `A citizen has asked the following question regarding DRTC services: "${question}". Answer based on the provided documents, using a decision tree format when the question is general.`;
 
 	// Añadimos el prompt del usuario al array de mensajes
 	messages.push({
